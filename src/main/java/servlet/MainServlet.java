@@ -36,16 +36,21 @@ public class MainServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("utf-8");
-		response.setContentType("application/json");
 		
 		TodoDao dao=new TodoDao();
 		List<TodoDto> list=dao.getTodos();
 		
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json = objectMapper.writeValueAsString(list);
+		for(int i=0; i<list.size(); i++) {
+			request.setAttribute("id", list.get(i).getId());
+			request.setAttribute("title", list.get(i).getTitle());
+			request.setAttribute("name", list.get(i).getName());
+			request.setAttribute("sequence", list.get(i).getSequence());
+			request.setAttribute("type", list.get(i).getType());
+			request.setAttribute("regdate", list.get(i).getRegdate());
+		}
 		
-		RequestDispatcher rd=request.getRequestDispatcher("main.jsp");
-		rd.forward(request, response);
+		//TodoDao를 이용해 결과를 조회해서 main.jsp 에 전달
+		request.getRequestDispatcher("main.jsp").forward(request, response);
 	}
 
 }
