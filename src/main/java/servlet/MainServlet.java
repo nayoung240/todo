@@ -39,17 +39,9 @@ public class MainServlet extends HttpServlet {
 		
 		TodoDao dao=new TodoDao();
 		List<TodoDto> list=dao.getTodos();
-		
-		for(int i=0; i<list.size(); i++) {
-			request.setAttribute("id", list.get(i).getId());
-			request.setAttribute("title", list.get(i).getTitle());
-			request.setAttribute("name", list.get(i).getName());
-			request.setAttribute("sequence", list.get(i).getSequence());
-			request.setAttribute("type", list.get(i).getType());
-			request.setAttribute("regdate", list.get(i).getRegdate());
-		}
-		
+	
 		//TodoDao를 이용해 결과를 조회해서 main.jsp 에 전달
+		request.setAttribute("list", list);		
 		request.getRequestDispatcher("main.jsp").forward(request, response);
 	}
 
