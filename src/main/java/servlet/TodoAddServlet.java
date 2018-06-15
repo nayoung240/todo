@@ -30,23 +30,25 @@ public class TodoAddServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("utf-8");
-		
+		response.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");
+
 		// 값가져오기
 	    String what = request.getParameter("what");
 	    String who = request.getParameter("who");
-	    int s = Integer.parseInt(request.getParameter("sequence"));
+	    int seq = Integer.parseInt(request.getParameter("sequence"));
 	    
 		//TodoDao를 이용해서 테이블에 저장		
 		TodoDto dto=new TodoDto();
 		dto.setTitle(what);
 		dto.setName(who);
-		dto.setSequence(s);
+		dto.setSequence(seq);
 		TodoDao dao=new TodoDao();
 		dao.addTodo(dto);
 		
+		System.out.println(dto.getTitle());
 		//메인화면으로 리다이렉트
-		response.sendRedirect("main.jsp");
+		response.sendRedirect("main");
 	}
 
 }
