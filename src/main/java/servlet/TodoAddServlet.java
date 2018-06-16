@@ -46,7 +46,6 @@ public class TodoAddServlet extends HttpServlet {
 		TodoDao dao=new TodoDao();
 		dao.addTodo(dto);
 		
-		System.out.println(dto.getTitle());
 		//메인화면으로 리다이렉트
 		response.sendRedirect("main");
 	}
