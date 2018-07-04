@@ -10,7 +10,7 @@ import java.util.List;
 import Todo.dto.TodoDto;
 
 public class TodoDao {
-	private static String dburl = "jdbc:mysql://localhost:3306/tododb";
+	private static String dburl = "jdbc:mysql://localhost:3306/tododb?characterEncoding=UTF-8";
 	private static String dbuser = "root";
 	private static String dbpwd = "1234";
 	//입력

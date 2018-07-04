@@ -54,6 +54,11 @@ form {
 	margin-top: 5px;
 }
 
+#back a{
+text-decoration: none;
+color: black;
+}
+
 .radiodiv {
 	width: 16rem;
 	display: flex;
@@ -103,10 +108,10 @@ form {
 
     </div>
      <div class="button">
-        <button id="back">&#60;이전</button>
+        <button id="back"><a href="/Todo/main">&#60;이전</a></button>
         <div class="rbutton">
-        <button type="submit">제출</button>
-        <button type="reset">내용지우기</button>
+	        <button type="submit">제출</button>
+	        <button type="reset">내용지우기</button>
         </div>
     </div>
 </form>
