@@ -71,18 +71,10 @@
             float: right;
             display: flex;
         }
-
-        .tododiv div:nth-child(1) {
-            padding-right: 8px;
-        }
-
-        .tododiv div:nth-child(2) {
-            padding-right: 8px;
-        }
-
-        .tododiv div:nth-child(3) {
-            padding-right: 8px;
-        }
+        
+		.tododiv > ul{
+			 padding-left: 0px; padding-right: 10px;
+		}
 
         .tododiv li {
             margin-bottom: 8px;
@@ -126,6 +118,9 @@
             float: right;
         }
  
+ 		.type, .id{
+ 			display: none;
+ 		}
     </style>
 </head>
 <body>
@@ -139,7 +134,7 @@
     </header>
     <section>
         <div class="tododiv">
-            <div class="todoindiv">
+            <ul class="todoindiv">
                 <li class="toprow">
                     <strong>TODO</strong>
                 </li>
@@ -153,11 +148,13 @@
 		                    <span>등록날짜: <fmt:formatDate value="${date}" pattern="yyyy.MM.dd"/>, ${list.name},우선순위 ${list.sequence}
 		                    	<button class="movebtn"  type="button" value="next" >&rarr;</button>
 							 </span>
+							 <p class="type">${list.type}</p>
+							 <p class="id">${list.id}</p>
 	                </li>
                 	</c:if>
                 </c:forEach> 
-            </div>
-            <div class="doingindiv">
+            </ul>
+            <ul class="doingindiv">
                 <li class="toprow">
                     <strong>DOING</strong>
                 </li>
@@ -173,8 +170,8 @@
 	                </li>
                 	</c:if>
                 </c:forEach> 
-            </div>
-            <div class="doneindiv">
+            </ul>
+            <ul class="doneindiv">
                 <li class="toprow">
                     <strong>DONE</strong>
                 </li>
@@ -189,57 +186,40 @@
 	                </li>
                 	</c:if>
                 </c:forEach> 
-            </div>
+            </ul>
 
         </div>
     </section>
     <script>
-    var xmlHttp;
-	var id=parseInt("${id}");
-	var type="${type}";
-	
-    function createXMLHttpRequest() {
-        if (window.ActiveXObject) {
-            xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-        } 
-        else if (window.XMLHttpRequest) {
-            xmlHttp = new XMLHttpRequest();
-        }
-    }
-        
-    function startRequest() {
-        createXMLHttpRequest();
-        xmlHttp.onreadystatechange = handleStateChange;
-      //TodoTypeServlet에게 Todo의 Id와 상태 값을 전달
-        xmlHttp.open("POST", "/Todo/type", true);
-        xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlHttp.send("id="+id+"&type="+type);
-    }
-        
-    function handleStateChange() {
-        if(xmlHttp.readyState == 4) { //응답처리가 끝나면
-            if(xmlHttp.status == 200) { //정상일 때
+    var id=document.querySelector(".id").innerHTML;
+    var type=document.querySelector(".type").innerHTML;
+    
+    function ajax() {
+    	   var oReq = new XMLHttpRequest();
+    		
+    	  oReq.addEventListener("load", function() {
+          	console.log("!!!!");
+        	
+        	var tododiv=document.querySelector(".todoindiv");
+        	var doingdiv=document.querySelector(".doingindiv");
+        	var donediv=document.querySelector(".doneindiv");
 
-            	console.log("!!!!");
-            	
-            	var tododiv=document.querySelector(".todoindiv");
-            	var doingdiv=document.querySelector(".doingindiv");
-            	var donediv=document.querySelector(".doneindiv");
+        	var addrow=document.querySelector(".addrow");
+        	tododiv.removeChild(addrow);
+        	doingdiv.insertAdjacentHTML('beforeend',addrow.outerHTML);
+    	  });
+          
+    	  oReq.open("POST", "/Todo/type", true);
+    	  oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    	  oReq.send("id="+id+"&type="+type);
+    	}
 
-            	var addrow=document.querySelector(".addrow");
-            	tododiv.removeChild(addrow);
-            	doingdiv.insertAdjacentHTML('beforeend',addrow.outerHTML);
-        	        	
-            }
-            else{
-    			alert('error!!');
-    		}
+    var todoul = document.querySelector(".todoindiv");
+    todoul.addEventListener("click",function(e) {
+        if (e.target.tagName === "BUTTON") {
+        	//console.log(e.currentTarget);
+        	ajax();
         }
-    }
-    //var btn=document.querySelector(".todoindiv .movebtn");
-    var btn=document.querySelector("button.movebtn");
-    btn.addEventListener("click", function(e){
-    	startRequest();
     });
 
     </script>
