@@ -147,9 +147,9 @@
 	                    <strong>${list.title}</strong>
 		                    <span>등록날짜: <fmt:formatDate value="${date}" pattern="yyyy.MM.dd"/>, ${list.name},우선순위 ${list.sequence}
 		                    	<button class="movebtn"  type="button" value="next" >&rarr;</button>
+		                    	<span class="type">${list.type}</span>
+							 	<span class="id">${list.id}</span>
 							 </span>
-							 <p class="type">${list.type}</p>
-							 <p class="id">${list.id}</p>
 	                </li>
                 	</c:if>
                 </c:forEach> 
@@ -161,11 +161,11 @@
                  <c:forEach var="list" items="${list}">
                 	<c:if test="${list.type=='DOING'}">
                 	<fmt:parseDate value='${list.regdate}' var='date' pattern="yyyy-MM-dd H:m" />
-	                
 	                <li class="addrow">
 	                    <strong>${list.title}</strong>
 		                    <span>등록날짜: <fmt:formatDate value="${date}" pattern="yyyy.MM.dd"/>, ${list.name},우선순위 ${list.sequence}
 		                    	<button class="movebtn"  type="button" value="next">&rarr;</button>
+							 	<span class="id">${list.id}</span>
 		                    </span>		             
 	                </li>
                 	</c:if>
@@ -181,7 +181,6 @@
 	                <li class="addrow">
 	                    <strong>${list.title}</strong>
 		                    <span>등록날짜: <fmt:formatDate value="${date}" pattern="yyyy.MM.dd"/>, ${list.name},우선순위 ${list.sequence}
-		                    	<button class="movebtn"  type="button" value="next">&rarr;</button>
 		                    </span>
 	                </li>
                 	</c:if>
@@ -191,23 +190,21 @@
         </div>
     </section>
     <script>
-    var id=document.querySelector(".id").innerHTML;
-    var type=document.querySelector(".type").innerHTML;
     
-    function ajax() {
-    	   var oReq = new XMLHttpRequest();
+    function ajaxTodo(id, type, addrow) {
+           
+    	var oReq = new XMLHttpRequest();
     		
-    	  oReq.addEventListener("load", function() {
-          	console.log("!!!!");
+    	oReq.addEventListener("load", function() {
+          	console.log("doing으로 이동");
         	
-        	var tododiv=document.querySelector(".todoindiv");
-        	var doingdiv=document.querySelector(".doingindiv");
-        	var donediv=document.querySelector(".doneindiv");
-
-        	var addrow=document.querySelector(".addrow");
+         	var tododiv=document.querySelector(".todoindiv");
+           	var doingdiv=document.querySelector(".doingindiv");
+        	
+         	//카드 이동
         	tododiv.removeChild(addrow);
         	doingdiv.insertAdjacentHTML('beforeend',addrow.outerHTML);
-    	  });
+    	 });
           
     	  oReq.open("POST", "/Todo/type", true);
     	  oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -217,10 +214,49 @@
     var todoul = document.querySelector(".todoindiv");
     todoul.addEventListener("click",function(e) {
         if (e.target.tagName === "BUTTON") {
-        	//console.log(e.currentTarget);
-        	ajax();
+        	var id=e.target.parentElement.querySelector(".id").innerText;
+        	console.log(id);
+        	var type="TODO";
+        	var addrow=e.target.parentElement.parentElement;
+        	ajaxTodo(id, type, addrow);
         }
     });
 
+    function ajaxDoing(id, type, addrow) {
+        
+    	var oReq = new XMLHttpRequest();
+ 		
+ 	  oReq.addEventListener("load", function() {
+       	console.log("done으로 이동");
+
+     	var doingdiv=document.querySelector(".doingindiv");
+     	var donediv=document.querySelector(".doneindiv");
+     	
+     	var span=addrow.children[1];
+     	var moveBtn=span.children[0];
+		
+     	//이동 버튼 삭제
+     	span.removeChild(moveBtn);
+     	//카드 이동
+     	doingdiv.removeChild(addrow);
+     	donediv.insertAdjacentHTML('beforeend',addrow.outerHTML);
+ 	  });
+       
+ 	  oReq.open("POST", "/Todo/type", true);
+ 	  oReq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+ 	  oReq.send("id="+id+"&type="+type);
+ 	}
+    
+    var doingUl=document.querySelector(".doingindiv");
+    doingUl.addEventListener("click",function(e) {
+        if (e.target.tagName === "BUTTON") {
+         	var id=e.target.parentElement.querySelector(".id").innerText;
+        	console.log(id);
+        	var type="DOING";
+        	var addrow=e.target.parentElement.parentElement;
+        	ajaxDoing(id, type, addrow); 
+        }
+    });
+    
     </script>
 </body>
